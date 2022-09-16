@@ -6,31 +6,36 @@ linreg <- function(formula, data){
   y <- as.matrix(iris[,all.vars(formula)[1]])
 
   #Calculating the equations using ordinary least squares
-  est_beta <- solve(t(X)%*%X)%*%(t(X)%*% y) #Regressions coefficient
-  y_pred <- X %*% est_beta #Fitted Values
-  resid_e <- y-y_pred #Residuals
-  est_beta <- solve(t(X) %*% X) %*% (t(X) %*% y)
-  pred_y <- X %*% est_beta
-  resid_e <- y - pred_y
-  deg_freed <- length(y) - length(est_beta)
-  resid_var_e <- (t(resid_e) %*% resid_e)/deg_freed
-  var_est_beta <- as.vector(resid_var_e) * diag(solve(t(X) %*% X))
-  t_val <- (est_beta/(sqrt(var_est_beta)))
+  est_beta_f <- solve(t(X)%*%X)%*%(t(X)%*% y) #Regressions coefficient
+  y_pred_f <- X %*% est_beta_f #Fitted Values
+  resid_e_f <- y - y_pred_f #Residuals
+  deg_freed_f <- length(y) - length(est_beta_f)
+  resid_var_e_f <- (t(resid_e_f) %*% resid_e_f)/deg_freed_f
+  # resid_var_e_f <- as.vector(resid_var_e_f)
+  var_est_beta_f <- c(resid_var_e_f) * diag(solve(t(X) %*% X))
+  var_est_beta_f <- as.vector(var_est_beta_f)
+  t_val_f <- (est_beta_f/(sqrt(var_est_beta_f)))
 
-  est_beta <- as.vector(est_beta)
-  names(est_beta) <- colnames(X)
+  est_beta_f <- as.vector(est_beta_f)
+  names(est_beta_f) <- colnames(X)
 
   #Creating the final linregClass object to be returned
-  linreg_obj <- linregClass$new(est_beta = est_beta,
-                                y_pred = y_pred,
-                                resid_e = resid_e)
+  linreg_obj <- linregClass$new(est_beta = est_beta_f,
+                                y_pred = y_pred_f,
+                                resid_e = resid_e_f,
+                                deg_freed = deg_freed_f,
+                                resid_var_e = resid_var_e_f,
+                                var_est_beta = var_est_beta_f,
+                                t_val_beta = t_val_f
+                                )
   return(linreg_obj)
 }
 
 linreg_obj <- linreg(Petal.Length~Species, data = iris)
-linreg_obj$est_beta
+linreg_obj$t_val_beta
 
 
 X <- model.matrix(Petal.Length~Species, iris)
 #Get the dependent matrix y
 y <- as.matrix(iris[,all.vars(Petal.Length~Species)[1]])
+
