@@ -1,4 +1,4 @@
-linreg <- setRefClass('linreg',
+linregClass <- setRefClass('linregClass',
                       fields = list(
                         est_beta = 'matrix',
                         y_pred = 'matrix',
