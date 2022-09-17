@@ -54,3 +54,4 @@ est_beta_f <- solve(t(X)%*%X)%*%(t(X)%*% y) #Regressions coefficient
 y_pred_f <- X %*% est_beta_f #Fitted Values
 resid_e_f <- y - y_pred_f #Residuals
 resid_e_f
+

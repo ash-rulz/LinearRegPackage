@@ -47,23 +47,23 @@ linregClass <- setRefClass('linregClass',
                             ggtitle('Residuals vs Fitted') +
                             xlab(paste('Fitted Values \n','linreg(', format(formula),')'))+
                             ylab('Residuals')+
-                            theme(plot.title = element_text(hjust = 0.5)) +
+                            theme(plot.title = element_text(hjust = 0.5), panel.background = element_rect(fill = 'white', color = 'black')) +
                             geom_smooth(method = "lm",
                                         linetype = "dotted",
                                         se = FALSE)+
-                            stat_summary(fun.y=median, colour="red", geom="line", aes(group = 1))
+                            stat_summary(fun=median, colour="red", geom="line", aes(group = 1))
 
-                          df2 <- data.frame(Fitted_Values = y_pred,
-                                            Standardized_Residuals = sqrt(resid_var_e))
+
+                          stand_e <- sqrt(abs((resid_e - mean(resid_e))/sd(resid_e)))
+                          df2 <- data.frame(Fitted_Value = y_pred, Standardized_Residuals = stand_e)
                           plot_2 <- ggplot(df2,
-                                           aes(x=Fitted_Values, y=Standardized_Residuals, group = 1)) +
+                                           aes(x=Fitted_Value, y=Standardized_Residuals, group = 1)) +
                             geom_point(size=2.5, shape = 1) +
+                            xlab(paste('Fitted Values \n','linreg(', format(formula),')'))+
+                            ylab(expression(sqrt("|Standardized Residual|")))+
                             ggtitle('Scale−Location') +
-                            theme(plot.title = element_text(hjust = 0.5))
-                            # geom_smooth(method = "lm",
-                            #             linetype = "dotted",
-                            #             se = FALSE)+
-                            # stat_summary(fun.y=median, colour="red", geom="line", aes(group = 1))
+                            theme(plot.title = element_text(hjust = 0.5), panel.background = element_rect(fill = 'white', color = 'black'))+
+                            stat_summary(fun=mean, colour="red", geom="line", aes(group = 1))
                           grid.arrange(plot_1, plot_2, nrow = 1)
                         },
                         resid = function(){
