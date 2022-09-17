@@ -36,7 +36,7 @@ linregClass <- setRefClass('linregClass',
                                                    #The first attribute is the independent variable in formula.
                                                    X <- model.matrix(formula, data)
                                                    #Get the dependent matrix y
-                                                   y <- as.matrix(iris[,all.vars(formula)[1]])
+                                                   y <- as.matrix(data[,all.vars(formula)[1]])
                                                    
                                                    #Calculating the equations using ordinary least squares
                                                    est_beta_f <- solve(t(X)%*%X)%*%(t(X)%*% y) #Regressions coefficient
