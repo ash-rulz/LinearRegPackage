@@ -1,13 +1,19 @@
 Package: LinearRegPackage
 Type: Package
-Title: What the package does (short line)
-Version: 1.0
+Title: Computes Multiple Linear Regression For Given Formula And Data
+Version: 1.0.0
 Date: 2022-09-14
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: c(
+    person('Varun', 'Ravi', email = 'varsi146@student.liu.se', role = 'aut')
+    person('Aswath', 'Gopinath', email = 'aswma317@student.liu.se', role = 'aut')
+Maintainer: Varun Ravi <varsi146@student.liu.se>
+Description: Linreg class calculates the computations required for multiple regression model
+    using the ordinary least square method. It also provides methods like print, plot,
+    resid, coef and summary.
+License: GPL-3 + file LICENSE
+Encoding: UTF-8
 RoxygenNote: 7.2.1
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+LazyData: true

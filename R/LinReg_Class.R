@@ -1,22 +1,25 @@
-#' Title
+library(ggplot2)
+library(gridExtra)
+#' @title Computes Multiple Linear Regression For Given Formula And Data
 #'
-#' @field est_beta vector.
-#' @field y_pred matrix.
-#' @field resid_e matrix.
-#' @field deg_freed numeric.
-#' @field resid_var_e matrix.
-#' @field var_est_beta vector.
-#' @field t_val_beta matrix.
+#' @description Linreg class calculates the computations required for multiple regression model
+#'     using the ordinary least square method. It also provides methods like print, plot,
+#'     resid, coef and summary.
+#' @field formula formula. 
+#' @field data data.frame. 
+#' @field est_beta vector. 
+#' @field y_pred matrix. 
+#' @field resid_e matrix. 
+#' @field deg_freed numeric. 
+#' @field resid_var_e matrix. 
+#' @field var_est_beta vector. 
+#' @field t_val_beta matrix. 
+#' @field data_set character. 
 #'
-#' @return
 #' @exportClass linreg
 #' @import ggplot2
 #' @import gridExtra
 #'
-#' @examples
-
-library(ggplot2)
-library(gridExtra)
 linreg <- setRefClass('linreg',
                            fields = list(
                              formula = 'formula',
