@@ -18,4 +18,11 @@ knitr::opts_chunk$set(
 library(LinearRegPackage)
 ```
 
-This is the introduction to multiple linear regression package. We use it to calculate the various computation required for multiple linear regression and there are also various methods like print, plot etc.
+This is a package to handle linear regression models. We use it to calculate the various computation required for multiple linear regression and also offer certain functions like plot, print etc.
+
+# Classes offered by the package
+1. linreg
+
+## Methods offered by the class
+1. print()
+
