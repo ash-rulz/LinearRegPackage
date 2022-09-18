@@ -37,8 +37,8 @@ linreg <- setRefClass('linreg',
                              initialize=function(formula = formula(),
                                                  data = data.frame())
                                                  {
-                                                   .self$formula <<- formula
-                                                   .self$data <<- data
+                                                   .self[['formula']] <<- formula
+                                                   .self[['data']] <<- data
 
                                                    #Create the design matrix X.
                                                    #The first attribute is the independent variable in formula.
@@ -61,14 +61,14 @@ linreg <- setRefClass('linreg',
                                                    data_set_f <- deparse(substitute(data))
 
                                                    #Assigning to the class attributes
-                                                   .self$est_beta <<- est_beta_f
-                                                   .self$y_pred <<- round(y_pred_f, 2)
-                                                   .self$resid_e <<- resid_e_f
-                                                   .self$deg_freed <<- deg_freed_f
-                                                   .self$resid_var_e <<- resid_var_e_f
-                                                   .self$var_est_beta <<- var_est_beta_f
-                                                   .self$t_val_beta <<- t_val_f
-                                                   .self$data_set <<- data_set_f
+                                                   .self[['est_beta']] <<- est_beta_f
+                                                   .self[['y_pred']] <<- round(y_pred_f, 2)
+                                                   .self[['resid_e']] <<- resid_e_f
+                                                   .self[['deg_freed']] <<- deg_freed_f
+                                                   .self[['resid_var_e']] <<- resid_var_e_f
+                                                   .self[['var_est_beta']] <<- var_est_beta_f
+                                                   .self[['t_val_beta']] <<- t_val_f
+                                                   .self[['data_set']] <<- data_set_f
                              },
                              pred = function(){
                                return(y_pred)
@@ -106,7 +106,7 @@ linreg <- setRefClass('linreg',
                                  geom_point(size=2.5, shape = 1) +
                                  xlab(paste('Fitted Values \n','linreg(', format(formula),')'))+
                                  ylab(expression(sqrt("|Standardized Residual|")))+
-                                 ggtitle('Scale−Location') +
+                                 ggtitle('Scale Location') +
                                  theme(plot.title = element_text(hjust = 0.5), panel.background = element_rect(fill = 'white', color = 'black'))+
                                  stat_summary(fun=mean, colour="red", geom="line", aes(group = 1))
                                grid.arrange(plot_1, plot_2, nrow = 1)
