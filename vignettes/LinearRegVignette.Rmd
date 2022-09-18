@@ -24,5 +24,18 @@ This is a package to handle linear regression models. We use it to calculate the
 1. linreg
 
 ## Methods offered by the class
-1. print()
+1. print()  
+
+    This method prints out the $\hat{\beta}$, that is, the estimated Regression Coefficients.
+    Example: 
+    
+    ```R
+    linreg$print()
+    ```
+    Prints the following:
+    
+    Coefficients:
+    
+      (Intercept)  Speciesversicolor   Speciesvirginica  
+              1.5                2.8                4.1  
 
