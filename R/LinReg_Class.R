@@ -17,7 +17,7 @@
 
 library(ggplot2)
 library(gridExtra)
-linregClass <- setRefClass('linregClass',
+linreg <- setRefClass('linreg',
                            fields = list(
                              formula = 'formula',
                              data = 'data.frame',
@@ -43,7 +43,7 @@ linregClass <- setRefClass('linregClass',
                                                    #Get the dependent matrix y
                                                    y <- as.matrix(data[,all.vars(formula)[1]])
                                                    #Calculating the equations using ordinary least squares
-                                                   est_beta_f <- round(solve(t(X)%*%X)%*%(t(X)%*% y), 2) #Regressions coefficient
+                                                   est_beta_f <- solve(t(X)%*%X)%*%(t(X)%*% y) #Regressions coefficient
                                                    y_pred_f <- X %*% est_beta_f #Fitted Values
                                                    resid_e_f <- y - y_pred_f #Residuals
                                                    deg_freed_f <- length(y) - length(est_beta_f)
@@ -59,7 +59,7 @@ linregClass <- setRefClass('linregClass',
 
                                                    #Assigning to the class attributes
                                                    .self$est_beta <<- est_beta_f
-                                                   .self$y_pred <<- y_pred_f
+                                                   .self$y_pred <<- round(y_pred_f, 2)
                                                    .self$resid_e <<- resid_e_f
                                                    .self$deg_freed <<- deg_freed_f
                                                    .self$resid_var_e <<- resid_var_e_f
@@ -71,8 +71,8 @@ linregClass <- setRefClass('linregClass',
                                return(y_pred)
                              },
                              print = function(){
-                               cat("\nCall:\n",
-                                   paste('linreg(formula = ', format(formula), ',', ' data = ', data_set, ')\n\n', sep = ''))
+                               cat(paste('linreg(formula = ', format(formula), 
+                                         ',', ' data = ', data_set, ')\n\n', sep = ''))
                                cat("Coefficients:\n")
                                print.default(format(est_beta, digits = 2),
                                              print.gap = 2L, quote = FALSE)
@@ -129,22 +129,32 @@ linregClass <- setRefClass('linregClass',
                                cat("\nResidual standard error:",
                                    format(stand_e), "on", deg_freed, "degrees of freedom")
                              }))
-linreg_mod <- linregClass$new(Petal.Length~Species, data = iris)
-
-linreg_mod$formula
-linreg_mod$data
-linreg_mod$y_pred
-linreg_mod$est_beta
-linreg_mod$resid_e
-linreg_mod$resid_var_e
-linreg_mod$deg_freed
-linreg_mod$var_est_beta
-linreg_mod$t_val_beta
-linreg_mod$print()
-linreg_mod$pred()
-linreg_mod$plot()
-linreg_mod$resid()
-linreg_mod$coef()
-linreg_mod$summary()
-
-summary(mod_object)
+# linreg_mod <- linreg$new(Petal.Length~Species, data = iris)
+# linreg_mod <- linreg$new(Petal.Length~Sepal.Width+Sepal.Length, data=iris)
+# class(linreg_mod)[1] 
+# linreg_mod$formula
+# linreg_mod$data
+# linreg_mod$y_pred
+# linreg_mod$est_beta
+# linreg_mod$resid_e
+# linreg_mod$resid_var_e
+# linreg_mod$deg_freed
+# linreg_mod$var_est_beta
+# linreg_mod$t_val_beta
+# linreg_mod$print()
+# linreg_mod$pred()
+# linreg_mod$plot()
+# linreg_mod$resid()
+# linreg_mod$coef()
+# linreg_mod$summary()
+# 
+# summary(mod_object)
+# 
+# X <- model.matrix(Petal.Length~(Sepal.Width+Sepal.Length), data=iris)
+# y <- as.matrix(iris[,all.vars(Petal.Length~Sepal.Width+Sepal.Length)[1]])
+# est_beta_f <- solve(t(X)%*%X)%*%(t(X)%*% y) #Regressions coefficient
+# y_pred_f <- X %*% est_beta_f #Fitted Values
+# 
+# 
+# X1 <- model.matrix(Petal.Length~Species, data=iris)
+# y1 <- as.matrix(iris[,all.vars(Petal.Length~Species)[1]])
