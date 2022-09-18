@@ -21,7 +21,21 @@ library(LinearRegPackage)
 This is a package to handle linear regression models. We use it to calculate the various computation required for multiple linear regression and also offer certain functions like plot, print etc.
 
 # Classes offered by the package
-1. linreg
+1. **linreg**: linreg class contains the following attributes:
+    * formula of 'formula' type
+    * data of 'data.frame' type
+    * est_beta of 'vector' type
+    * y_pred of 'matrix' type
+    * resid_e of 'matrix' type
+    * deg_freed of 'numeric' type
+    * resid_var_e of 'matrix' type
+    * var_est_beta of 'vector' type
+    * t_val_beta of 'matrix' type
+    * data_set of 'character' type
+
+    To create an object of class linreg, the formula and data
+    attributes must be passed. An example is shown below:
+
 
 ## Methods offered by the class
 1. print()
