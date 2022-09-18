@@ -14,6 +14,9 @@
 #' @import gridExtra
 #'
 #' @examples
+
+library(ggplot2)
+library(gridExtra)
 linregClass <- setRefClass('linregClass',
                            fields = list(
                              formula = 'formula',
@@ -24,22 +27,23 @@ linregClass <- setRefClass('linregClass',
                              deg_freed = 'numeric',
                              resid_var_e = 'matrix',
                              var_est_beta = 'vector',
-                             t_val_beta = 'matrix'
+                             t_val_beta = 'matrix',
+                             data_set = 'character'
                            ),
                            methods=list(
                              initialize=function(formula = formula(),
-                                                 data = data.frame()) 
+                                                 data = data.frame())
                                                  {
                                                    .self$formula <<- formula
                                                    .self$data <<- data
+
                                                    #Create the design matrix X.
                                                    #The first attribute is the independent variable in formula.
                                                    X <- model.matrix(formula, data)
                                                    #Get the dependent matrix y
                                                    y <- as.matrix(data[,all.vars(formula)[1]])
-                                                   
                                                    #Calculating the equations using ordinary least squares
-                                                   est_beta_f <- solve(t(X)%*%X)%*%(t(X)%*% y) #Regressions coefficient
+                                                   est_beta_f <- round(solve(t(X)%*%X)%*%(t(X)%*% y), 2) #Regressions coefficient
                                                    y_pred_f <- X %*% est_beta_f #Fitted Values
                                                    resid_e_f <- y - y_pred_f #Residuals
                                                    deg_freed_f <- length(y) - length(est_beta_f)
@@ -48,10 +52,11 @@ linregClass <- setRefClass('linregClass',
                                                    var_est_beta_f <- c(resid_var_e_f) * diag(solve(t(X) %*% X))
                                                    var_est_beta_f <- as.vector(var_est_beta_f)
                                                    t_val_f <- (est_beta_f/(sqrt(var_est_beta_f)))
-                                                   
+
                                                    est_beta_f <- as.vector(est_beta_f)
                                                    names(est_beta_f) <- colnames(X)
-                                                   
+                                                   data_set_f <- deparse(substitute(data))
+
                                                    #Assigning to the class attributes
                                                    .self$est_beta <<- est_beta_f
                                                    .self$y_pred <<- y_pred_f
@@ -60,11 +65,14 @@ linregClass <- setRefClass('linregClass',
                                                    .self$resid_var_e <<- resid_var_e_f
                                                    .self$var_est_beta <<- var_est_beta_f
                                                    .self$t_val_beta <<- t_val_f
+                                                   .self$data_set <<- data_set_f
                              },
                              pred = function(){
                                return(y_pred)
                              },
                              print = function(){
+                               cat("\nCall:\n",
+                                   paste('linreg(formula = ', format(formula), ',', ' data = ', data_set, ')\n\n', sep = ''))
                                cat("Coefficients:\n")
                                print.default(format(est_beta, digits = 2),
                                              print.gap = 2L, quote = FALSE)
@@ -86,8 +94,8 @@ linregClass <- setRefClass('linregClass',
                                              linetype = "dotted",
                                              se = FALSE)+
                                  stat_summary(fun=median, colour="red", geom="line", aes(group = 1))
-                               
-                               
+
+
                                stand_e <- sqrt(abs((resid_e - mean(resid_e))/sd(resid_e)))
                                df2 <- data.frame(Fitted_Value = y_pred, Standardized_Residuals = stand_e)
                                plot_2 <- ggplot(df2,
@@ -102,19 +110,41 @@ linregClass <- setRefClass('linregClass',
                              },
                              resid = function(){
                                return(c(resid_e))
+                             },
+                             summary = function(){
+                               sse <- sum(resid_e ** 2)
+                               k <- length(est_beta)-1
+                               n = length(resid_e)
+                               stand_e <- round(sqrt(sse/(n-(k+1))),4)
+                               cat("\nCall:\n",
+                                   paste('linreg(formula = ', format(formula), ',', ' data = ', data_set, ')\n\n', sep = ''))
+                               cat("Coefficients:\n")
+                               coef_matrix <- matrix(est_beta)
+                               # dimnames(coef_matrix) <- list(names(est_beta))
+                               std_e <- round(sqrt(var_est_beta),5)
+                               p_val <- 2*pt(q = abs(t_val_beta), df = (as.numeric(deg_freed)), lower.tail = FALSE)
+                               coef_matrix <- cbind(coef_matrix, std_e, round(t_val_beta, 2), p_val)
+                               colnames(coef_matrix) <- c('Estimate', 'Std. Error', 't value', 'Pr(>|t|)')
+                               print.default(coef_matrix)
+                               cat("\nResidual standard error:",
+                                   format(stand_e), "on", deg_freed, "degrees of freedom")
                              }))
-linobj <- linregClass$new(Petal.Length~Species, data = iris)
-linobj$formula
-linobj$data
-linobj$est_beta
-linobj$y_pred                                    
-linobj$resid_e                                   
-linobj$deg_freed                                 
-linobj$resid_var_e                               
-linobj$var_est_beta                              
-linobj$t_val_beta                                
-linobj$print()
-linobj$plot()
-linobj$resid()
-linobj$pred()
-linobj$summary()
+linreg_mod <- linregClass$new(Petal.Length~Species, data = iris)
+
+linreg_mod$formula
+linreg_mod$data
+linreg_mod$y_pred
+linreg_mod$est_beta
+linreg_mod$resid_e
+linreg_mod$resid_var_e
+linreg_mod$deg_freed
+linreg_mod$var_est_beta
+linreg_mod$t_val_beta
+linreg_mod$print()
+linreg_mod$pred()
+linreg_mod$plot()
+linreg_mod$resid()
+linreg_mod$coef()
+linreg_mod$summary()
+
+summary(mod_object)
