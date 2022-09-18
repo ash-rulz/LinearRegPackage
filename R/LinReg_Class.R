@@ -9,7 +9,7 @@
 #' @field t_val_beta matrix.
 #'
 #' @return
-#' @export
+#' @exportClass linreg
 #' @import ggplot2
 #' @import gridExtra
 #'
@@ -116,45 +116,21 @@ linreg <- setRefClass('linreg',
                                k <- length(est_beta)-1
                                n = length(resid_e)
                                stand_e <- round(sqrt(sse/(n-(k+1))),4)
-                               cat("\nCall:\n",
-                                   paste('linreg(formula = ', format(formula), ',', ' data = ', data_set, ')\n\n', sep = ''))
-                               cat("Coefficients:\n")
+                               # coef_matrix <- matrix(ncol = 5)
                                coef_matrix <- matrix(est_beta)
                                # dimnames(coef_matrix) <- list(names(est_beta))
                                std_e <- round(sqrt(var_est_beta),5)
                                p_val <- 2*pt(q = abs(t_val_beta), df = (as.numeric(deg_freed)), lower.tail = FALSE)
-                               coef_matrix <- cbind(coef_matrix, std_e, round(t_val_beta, 2), p_val)
-                               colnames(coef_matrix) <- c('Estimate', 'Std. Error', 't value', 'Pr(>|t|)')
-                               print.default(coef_matrix)
+                               sign_code_v <- p_val
+                               sign_code_v[sign_code_v >0 & sign_code_v <0.001] <- '***'
+                               sign_code_v[sign_code_v >0.001 & sign_code_v <0.01] <- '**'
+                               sign_code_v[sign_code_v >0.01 & sign_code_v <0.05] <- '*'
+                               sign_code_v[sign_code_v >0.05 & sign_code_v <0.1] <- '.'
+                               sign_code_v[sign_code_v >0.1 & sign_code_v <1] <- ''
+                               coef_matrix <- cbind(coef_matrix, std_e, round(t_val_beta, 2), p_val, sign_code_v)
+                               colnames(coef_matrix) <- c('Estimate', 'Std. Error', 't value', 'Pr(>|t|)', 
+                                                          'Sign Code')
+                               print.default(coef_matrix, quote = FALSE)
                                cat("\nResidual standard error:",
                                    format(stand_e), "on", deg_freed, "degrees of freedom")
                              }))
-# linreg_mod <- linreg$new(Petal.Length~Species, data = iris)
-# linreg_mod <- linreg$new(Petal.Length~Sepal.Width+Sepal.Length, data=iris)
-# class(linreg_mod)[1] 
-# linreg_mod$formula
-# linreg_mod$data
-# linreg_mod$y_pred
-# linreg_mod$est_beta
-# linreg_mod$resid_e
-# linreg_mod$resid_var_e
-# linreg_mod$deg_freed
-# linreg_mod$var_est_beta
-# linreg_mod$t_val_beta
-# linreg_mod$print()
-# linreg_mod$pred()
-# linreg_mod$plot()
-# linreg_mod$resid()
-# linreg_mod$coef()
-# linreg_mod$summary()
-# 
-# summary(mod_object)
-# 
-# X <- model.matrix(Petal.Length~(Sepal.Width+Sepal.Length), data=iris)
-# y <- as.matrix(iris[,all.vars(Petal.Length~Sepal.Width+Sepal.Length)[1]])
-# est_beta_f <- solve(t(X)%*%X)%*%(t(X)%*% y) #Regressions coefficient
-# y_pred_f <- X %*% est_beta_f #Fitted Values
-# 
-# 
-# X1 <- model.matrix(Petal.Length~Species, data=iris)
-# y1 <- as.matrix(iris[,all.vars(Petal.Length~Species)[1]])
