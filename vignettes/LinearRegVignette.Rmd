@@ -29,8 +29,11 @@ This is a package to handle linear regression models. We use it to calculate the
     This method prints out the $\hat{\beta}$, that is, the estimated Regression Coefficients.
     Example: 
     
-    ```R
-    linreg$print()
+    ```{r}
+    
+    linreg_obj <- linreg$new(formula = Petal.Length, data = iris)
+    linreg_obj$print()
+    
     ```
     Prints the following:
     
