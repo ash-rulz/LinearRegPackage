@@ -75,7 +75,7 @@ This is a package to handle linear regression models. We use it to calculate the
     Upon which it plots the graphs.  
     
     
-    ![Plot 1: Fitted vs Residual, Plot2: Fitted vs Standardized Residual](C:\Users\Varun\Desktop\LiU - STIMA\plot_method.png)
+    ![Plot 1: Fitted vs Residual, Plot2: Fitted vs Standardized Residual](C:\Users\Varun\Documents\LinearRegPackage\vignettes\plot_method.png)
   
     
     
