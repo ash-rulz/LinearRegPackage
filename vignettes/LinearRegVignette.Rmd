@@ -1,0 +1,21 @@
+---
+title: "LinearRegVignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{LinearRegVignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(LinearRegPackage)
+```
+
+This is the introduction to multiple linear regression package. We use it to calculate the various computation required for multiple linear regression and there are also various methods like print, plot etc.
