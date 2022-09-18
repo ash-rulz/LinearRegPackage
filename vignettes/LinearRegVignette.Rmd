@@ -47,7 +47,7 @@ This is a package to handle linear regression models. We use it to calculate the
     This method prints out the $\hat{\beta}$, that is, the estimated Regression Coefficients.
     Example: 
     
-    ```{r}
+    ```r
     
     linreg_obj <- linreg$new(formula = Petal.Length, data = iris)
     linreg_obj$print()
@@ -55,8 +55,90 @@ This is a package to handle linear regression models. We use it to calculate the
     ```
     Prints the following:
     
+    ```r
     Coefficients:
     
       (Intercept)  Speciesversicolor   Speciesvirginica  
               1.5                2.8                4.1  
+    ```
+2. plot()  
 
+    This method plots a graph for **Fitted Values** vs **Residuals** and **Fitted Values** vs **Standardized Residuals**, using the ggplot2 library.
+  
+    ```r
+  
+    linreg_obj <- linreg$new(formula = Petal.Length, data = iris)
+    linreg_obj$plot()
+  
+    ```
+    
+    Upon which it plots the graphs.  
+    
+    
+    ![Plot 1: Fitted vs Residual, Plot2: Fitted vs Standardized Residual](C:\Users\Varun\Desktop\LiU - STIMA\plot_method.png)
+  
+    
+    
+3. resid()  
+
+    This method returns the vector of residuals i.e, $\hat{e}$
+    
+    ```r
+    
+    linreg_obj <- linreg$new(formula = Petal.Length, data = iris)
+    linreg_obj$resid()
+    
+    ```
+    This outputs the following:
+    
+    ```r
+    
+    [1] -0.062 -0.062 -0.162  0.038 -0.062  0.238 -0.062  0.038 -0.062  0.038  0.038  0.138 -0.062 -0.362 -0.262  0.038 -0.162 -0.062  0.238  0.038  0.238  0.038 -0.462  0.238
+    [25]  0.438  0.138  0.138  0.038 -0.062  0.138  0.138  0.038  0.038 -0.062  0.038 -0.262 -0.162 -0.062 -0.162  0.038 -0.162 -0.162 -0.162  0.138  0.438 -0.062  0.138 -0.062
+    [49]  0.038 -0.062  0.440  0.240  0.640 -0.260  0.340  0.240  0.440 -0.960  0.340 -0.360 -0.760 -0.060 -0.260  0.440 -0.660  0.140  0.240 -0.160  0.240 -0.360  0.540 -0.260
+    [73]  0.640  0.440  0.040  0.140  0.540  0.740  0.240 -0.760 -0.460 -0.560 -0.360  0.840  0.240  0.240  0.440  0.140 -0.160 -0.260  0.140  0.340 -0.260 -0.960 -0.060 -0.060
+    [97] -0.060  0.040 -1.260 -0.160  0.448 -0.452  0.348  0.048  0.248  1.048 -1.052  0.748  0.248  0.548 -0.452 -0.252 -0.052 -0.552 -0.452 -0.252 -0.052  1.148  1.348 -0.552
+    [121]  0.148 -0.652  1.148 -0.652  0.148  0.448 -0.752 -0.652  0.048  0.248  0.548  0.848  0.048 -0.452  0.048  0.548  0.048 -0.052 -0.752 -0.152  0.048 -0.452 -0.452  0.348
+    [145]  0.148 -0.352 -0.552 -0.352 -0.152 -0.452
+    
+    ```
+    
+4. coef()  
+    
+    This method returns a similar output as the print() method, which returns a named vector of $\hat{\beta}$ values.
+    
+    ```r
+    
+    linreg_obj <- linreg$new(formula = Petal.Length, data = iris)
+    linreg_obj$coef()
+    
+    ```
+    
+5. summary()  
+    
+    This method prints out the estimate of $\hat{\beta}$, Standard Error, t_${\beta}$, $p_t$(p-value) along with the significant codes, Residual Standard Error and Degrees of freedom.
+    
+    ```r
+    
+    linreg_obj <- linreg$new(formula = Petal.Length, data = iris)
+    linreg_obj$summary()
+    
+    ```
+    
+    Prints the following: 
+    
+    ```r
+    
+                      Estimate         Std. Error t value Pr(>|t|)             Sign Code
+    (Intercept)       1.46200000000001 0.06086    24.02   9.30305152283648e-53 ***      
+    Speciesversicolor 2.79799999999999 0.08607    32.51   5.254587420216e-69   ***      
+    Speciesvirginica  4.08999999999999 0.08607    47.52   4.10613861905217e-91 ***      
+
+    Residual standard error: 0.4303 on 147 degrees of freedom
+    
+    
+    ```
+  
+    
+
+  
