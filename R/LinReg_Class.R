@@ -19,6 +19,7 @@ library(gridExtra)
 #' @exportClass linreg
 #' @import ggplot2
 #' @import gridExtra
+#' @import methods
 #'
 linreg <- setRefClass('linreg',
                            fields = list(
