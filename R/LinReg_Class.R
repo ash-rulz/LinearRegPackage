@@ -17,6 +17,7 @@ library(gridExtra)
 #' @field data_set character. 
 #'
 #' @exportClass linreg
+#' @export linreg
 #' @import ggplot2
 #' @import gridExtra
 #' @import methods
