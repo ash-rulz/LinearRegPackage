@@ -50,15 +50,15 @@ ridgereg <- setRefClass('ridgereg',
                             .self[['y_pred']] <<- y_pred_f
 
                           },
-                          predict = function(newdata){
+                          predict = function(test_data){
                             # t_obj <- terms(object)
-                            y_m <- as.matrix(newdata[,all.vars(formula)[1]])
+                            # y_m <- as.matrix(newdata[,all.vars(formula)[1]])
                             # t_terms <- delete.response(t_obj)
                             # m <- model.frame(t_terms, newdata)
-                            X_m <- model.matrix(formula, newdata)
+                            X_m <- model.matrix(formula, test_data)
                             X_m[,-1] <- scale(X_m[,-1])
-                            beta_ridge_f_m <- solve((t(X_m)%*%X_m)+(diag(ncol(X_m)))*lambda)%*%(t(X_m) %*% y_m)
-                            y_pred_f_m <- X_m %*% beta_ridge_f_m
+                            # beta_ridge_f_m <- solve((t(X_m)%*%X_m)+(diag(ncol(X_m)))*lambda)%*%(t(X_m) %*% y_m)
+                            y_pred_f_m <- X_m %*% beta_ridge
 
                             return(y_pred_f_m)
                           },
