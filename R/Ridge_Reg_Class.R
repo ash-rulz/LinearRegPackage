@@ -1,3 +1,18 @@
+#' Ridge Regression
+#'
+#' @field formula formula.
+#' @field data data.frame.
+#' @field lambda numeric.
+#' @field beta_ridge vector.
+#' @field X matrix.
+#' @field y_pred matrix.
+#' @field data_set character.
+#'
+#'
+#' @export ridgereg
+#' @exportClass ridgereg
+#'
+#' @examples
 ridgereg <- setRefClass('ridgereg',
                         fields = list(
                           formula = 'formula',
@@ -6,7 +21,8 @@ ridgereg <- setRefClass('ridgereg',
                           beta_ridge = 'vector',
                           X = 'matrix',
                           y_pred = 'matrix',
-                          data_set = 'character'
+                          data_set = 'character',
+                          terms = 'function'
                         ),
                         methods = list(
                           initialize = function(formula = formula(),
@@ -34,8 +50,17 @@ ridgereg <- setRefClass('ridgereg',
                             .self[['y_pred']] <<- y_pred_f
 
                           },
-                          predict = function(){
-                            return(y_pred)
+                          predict = function(newdata){
+                            # t_obj <- terms(object)
+                            y_m <- as.matrix(newdata[,all.vars(formula)[1]])
+                            # t_terms <- delete.response(t_obj)
+                            # m <- model.frame(t_terms, newdata)
+                            X_m <- model.matrix(formula, newdata)
+                            X_m[,-1] <- scale(X_m[,-1])
+                            beta_ridge_f_m <- solve((t(X_m)%*%X_m)+(diag(ncol(X_m)))*lambda)%*%(t(X_m) %*% y_m)
+                            y_pred_f_m <- X_m %*% beta_ridge_f_m
+
+                            return(y_pred_f_m)
                           },
                           coef = function(){
                             return(beta_ridge)
@@ -49,18 +74,18 @@ ridgereg <- setRefClass('ridgereg',
 
 
                         ))
-ridgeobj <- ridgereg$new(formula = Petal.Length~Species, data = iris, lambda = 4)
+ridgeobj <- ridgereg$new(formula = medv~., data = train_data, lambda = 4)
 ridgeobj$formula
 ridgeobj$data
 ridgeobj$lambda
 ridgeobj$X
 ridgeobj$beta_ridge
-ridgeobj$predict()
+ridgeobj$predict(test_data)
 print(ridgeobj)
 
 
-library(MASS)
-lm_test <- lm.ridge(formula = Petal.Length~Species, data = iris, lambda = 4)
-lm_test$plot(formula = Petal.Length~Species, data = iris, lambda = 4)
+# library(MASS)
+# lm_test <- lm.ridge(formula = Petal.Length~Species, data = iris, lambda = 4)
+# lm_test$plot(formula = Petal.Length~Species, data = iris, lambda = 4)
 
 
