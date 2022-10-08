@@ -35,6 +35,10 @@ tuned_perf
 lm_untuned_perf
 lm_tuned_perf
 
+
+#Fitting ridge regression model to the training data set for different
+# values of lambda (look at the plot too)
+
 lambda = seq(0, 25, by = 1)
 y_rmse <- c()
 c_rsq <- c()
@@ -53,6 +57,8 @@ plot(lambda, y_rmse)
 plot(lambda, c_mae)
 plot(lambda, c_rsq)
 
+
+#Finding best hyperparameter lambda using 10 fold cross validation
 ctrl <- trainControl(method = 'repeatedcv', repeats = 10)
 ridgefit <- train(medv~.,
                   data = data_train,
