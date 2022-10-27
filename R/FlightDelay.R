@@ -131,6 +131,34 @@ postResample(pred = ridgeobj$y_pred, obs = data_train$delay)
 #Scaling and centering the data
 # RMSE  Rsquared       MAE 
 # 0.9354605 0.1256278 0.5913300 
+final_df <- data.frame(matrix(nrow=0,ncol=4))
+colnames(final_df) <- c('lambda',
+                        'RMSE',
+                        'RSQ',
+                        'MAE')
+coef_df <- NULL
+for (i in 1:50) {
+  robj <- ridgereg$new(formula = delay~., 
+                           data = data_train, 
+                           lambda = i)  
+  x_pred <- robj$predict(data_validation)
+  perf_ridge <- postResample(pred = x_pred, obs = data_validation$delay)
+  final_df <- rbind(final_df, data.frame(lambda=i,
+                               RMSE=perf_ridge[1],
+                               RSQ=perf_ridge[2],
+                               MAE=perf_ridge[3]))
+  coef <- c(lambda = i,robj$beta_ridge)
+  coef_df <- rbind(coef_df, t(as.data.frame(coef)))
+}
+rownames(final_df) <- NULL
+final_df
+coef_df <- as.data.frame(coef_df)
+ggplot(coef_df) + geom_line(aes(x=lambda, y= humid))
+
+ggplot(final_df) + geom_line(aes(x=lambda, y= RMSE))
+geom_line(aes(x=lambda, y= RMSE))
++ geom_line(aes(x=lambda, y= MAE))
++ geom_line(aes(x=lambda, y= RSquare))
 
 lambda = seq(0, 10, by = .01)
 length(lambda)
