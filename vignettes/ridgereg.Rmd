@@ -29,6 +29,7 @@ There are multiple steps in this process:
 ### Step 1: Dividing the BostonHousing data into training and test sets using caret package.
 We use the createDataPartition function from caret package to divide the data set into training and test sets.
 ```{r}
+set.seed(42)
 data("BostonHousing")
 training_index <- caret::createDataPartition(BostonHousing$medv, p=0.77, list = F)
 data_train <- BostonHousing[training_index,]
@@ -70,10 +71,76 @@ lmFit_forward <- caret::train(medv ~ .,
 bh_pred_forward <- predict(lmFit_forward, data_test)
 ```
 
-As it is visible, the RMSE value is now slightly lower as compared to Simple Linear Regression method.
+The results of forward selection of covariates and corresponding RMSE values are as shown below:
 ```{r, echo=TRUE,eval=TRUE}
 
+lmFit_forward
 tuned_perf <- caret::postResample(pred = bh_pred_forward, obs = data_test$medv)
+tuned_perf
+
+```
+
+### Step 3: Fitting our own ridgereg() Ridge Regression function for various values of $\lambda$
+
+We use an approach where we loop over different values $\lambda$ and then fit our ridgereg() function to the training data and then predict values of the test data.
+
+```{r, echo=TRUE, eval=TRUE}
+# lambda = seq(0, 25, by = 1)
+# y_rmse <- c()
+# c_rsq <- c()
+# c_mae <- c()
+# x <- ridgereg$new(formula = medv~., data = data_train, lambda = 1)
+# x$predict(data_test)
+# for(i in lambda){
+# 
+#   x <- ridgereg$new(formula = medv~., data = data_train, lambda = i)
+#   print(x)
+#   # x_pred <- x$predict(data_test)
+#   tuned_perf_ridge <- postResample(pred = x_pred, obs = data_test$medv)
+#   y_rmse <- c(y_rmse, tuned_perf_ridge[1])
+#   c_rsq <- c(c_rsq, tuned_perf_ridge[2])
+#   c_mae <- c(c_mae, tuned_perf_ridge[3])
+# 
+# }
+# plot(lambda, y_rmse)
+# plot(lambda, c_mae)
+# plot(lambda, c_rsq)
+
+```
+
+### Step 4: Finding best hyperparameter value for $\lambda$ by 10-fold cross-validation.
+
+```{r, eval=TRUE, echo=TRUE}
+
+ctrl <- trainControl(method = 'repeatedcv', repeats = 10)
+ridgefit <- caret::train(medv~.,
+                  data = data_train,
+                  method = 'ridge',
+                  preProcess = c('scale', 'center'),
+                  tuneLength = 10,
+                  trControl = ctrl
+                  )
+ridgefit
+plot(ridgefit)
+
+```
+
+### Step 5: Comparision performance of above models on test dataset:
+We can compare the performance of various models by comparing RMSE of each models.
+
+#### Performance evaluation of Linear Regression model fit for predicting test data
+
+```{r, echo=FALSE, eval=TRUE}
 tuned_perf
 ```
 
+#### performance evaluation of Ridge Regression model fit for predicting test data
+
+
+#### Performance evaluation of Ridge Regression by 10-fold-cross validation
+
+```{r, echo=TRUE, eval=TRUE}
+ridge_pred <- predict(ridgefit, data_test)
+ridge_perf_rmse <- postResample(pred = ridge_pred, obs = data_test$medv)
+ridge_perf_rmse
+```
