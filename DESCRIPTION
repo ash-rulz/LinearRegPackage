@@ -12,7 +12,10 @@ Description: Linreg class calculates the computations required for multiple regr
     resid, coef and summary. The Ridgereg class calculates computations required for
     multiple regression using the OLS method, and additionally, it applies a penalty
     term, lambda, that shrinks the coefficients as it is increased and also reduces the
-    flexibility of the slope.
+    flexibility of the slope. The ridgereg vignette and the flight delay vignettes employ
+    machine learning models for predicting Median Value of BostonHousing dataset and Delay
+    of flights from nycflights dataset respectively. Additionally, there is also a function
+    that visualizes mean delay of flights for airports in the USA.
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.2.1
