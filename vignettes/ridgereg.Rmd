@@ -19,6 +19,7 @@ library(LinearRegPackage)
 library(MASS)
 library(caret)
 library(mlbench)
+library(elasticnet)
 ```
 
 # A simple prediction problem using our ridgereg() function.
@@ -85,33 +86,26 @@ tuned_perf
 We use an approach where we loop over different values $\lambda$ and then fit our ridgereg() function to the training data and then predict values of the test data.
 
 ```{r, echo=TRUE, eval=TRUE}
-# lambda = seq(0, 25, by = 1)
-# y_rmse <- c()
-# c_rsq <- c()
-# c_mae <- c()
-# x <- ridgereg$new(formula = medv~., data = data_train, lambda = 1)
-# x$predict(data_test)
-# for(i in lambda){
-# 
-#   x <- ridgereg$new(formula = medv~., data = data_train, lambda = i)
-#   print(x)
-#   # x_pred <- x$predict(data_test)
-#   tuned_perf_ridge <- postResample(pred = x_pred, obs = data_test$medv)
-#   y_rmse <- c(y_rmse, tuned_perf_ridge[1])
-#   c_rsq <- c(c_rsq, tuned_perf_ridge[2])
-#   c_mae <- c(c_mae, tuned_perf_ridge[3])
-# 
-# }
-# plot(lambda, y_rmse)
-# plot(lambda, c_mae)
-# plot(lambda, c_rsq)
-
+lambda = seq(0, 25, by = 1)
+y_rmse <- c()
+c_rsq <- c()
+c_mae <- c()
+for(i in lambda){
+  x <- ridgereg$new(formula = medv~., data = data_train, lambda = i)
+  x_pred <- x$predict(data_test)
+  tuned_perf_ridge <- postResample(pred = x_pred, obs = data_test$medv)
+  y_rmse <- c(y_rmse, tuned_perf_ridge[1])
+  c_rsq <- c(c_rsq, tuned_perf_ridge[2])
+  c_mae <- c(c_mae, tuned_perf_ridge[3])
+}
+plot(lambda, y_rmse)
+plot(lambda, c_mae)
+plot(lambda, c_rsq)
 ```
 
 ### Step 4: Finding best hyperparameter value for $\lambda$ by 10-fold cross-validation.
 
 ```{r, eval=TRUE, echo=TRUE}
-
 ctrl <- trainControl(method = 'repeatedcv', repeats = 10)
 ridgefit <- caret::train(medv~.,
                   data = data_train,
@@ -135,7 +129,6 @@ tuned_perf
 ```
 
 #### performance evaluation of Ridge Regression model fit for predicting test data
-
 
 #### Performance evaluation of Ridge Regression by 10-fold-cross validation
 
