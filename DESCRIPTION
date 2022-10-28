@@ -9,7 +9,10 @@ Author: c(
 Maintainer: Varun Ravi <varsi146@student.liu.se>
 Description: Linreg class calculates the computations required for multiple regression model
     using the ordinary least square method. It also provides methods like print, plot,
-    resid, coef and summary.
+    resid, coef and summary. The Ridgereg class calculates computations required for
+    multiple regression using the OLS method, and additionally, it applies a penalty
+    term, lambda, that shrinks the coefficients as it is increased and also reduces the
+    flexibility of the slope.
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.2.1
