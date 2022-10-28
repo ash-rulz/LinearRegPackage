@@ -1,0 +1,71 @@
+---
+title: "ridgereg"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ridgereg}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, echo=FALSE}
+library(LinearRegPackage)
+library(MASS)
+library(caret)
+library(mlbench)
+```
+
+# A simple prediction problem using our ridgereg() function.
+
+This vignette demonstrates how to perform a simple prediction using our own ridgereg() function available in this package. 
+There are multiple steps in this process:
+
+### Step 1: Dividing the BostonHousing data into training and test sets using caret package.
+We use the createDataPartition function from caret package to divide the data set into training and test sets.
+```{r}
+data("BostonHousing")
+training_index <- caret::createDataPartition(BostonHousing$medv, p=0.77, list = F)
+data_train <- BostonHousing[training_index,]
+data_test <- BostonHousing[-training_index,]
+
+```
+
+### Step 2: Linear Regression and Linear Regression with forward selection of covariates.
+
+#### Step 2.1: Simple Linear Regression:
+We fit a simple linear regression method 'lm' to predict values for the test data set.
+```{r}
+lmFit <- train(medv ~ .,
+               data = data_train,
+               method = 'lm',
+               preProcess = c("scale", "center"))
+
+bh_pred <- predict(lmFit, data_test)
+
+```
+
+We are predicting the Median Value of houses, by fitting the trained lmFit model on test data set and we use postResample to obtain RMSE, R-Squared and MAE values.
+```{r, echo=TRUE,eval=TRUE}
+
+untuned_perf <- postResample(pred = bh_pred, obs = data_test$medv)
+untuned_perf
+```
+
+#### Step 2.2: Linear Regression by forward selection of covariates:
+We fit a linear regression with forward selection of covariates by method 'leapForward'
+```{r}
+
+lmFit_forward <- train(medv ~ .,
+               data = data_train,
+               method = 'leapForward',
+               preProcess = c("scale", "center"),
+               tuneGrid = expand.grid(nvmax = seq(1, 13, 2))
+               )
+bh_pred_forward <- predict(lmFit_forward, data_test)
+```
