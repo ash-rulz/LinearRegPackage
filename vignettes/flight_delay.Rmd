@@ -28,6 +28,7 @@ and arr_delay in the nycflights13::flights data. Consider only those entries
 where delay is more than 0. Then join the flight data with the weather data to 
 get the final set of dependent and independent variables.
 ```{r echo=TRUE, eval=TRUE}
+set.seed(2)
 flight_data <- dplyr::rowwise(nycflights13::flights) %>%
   dplyr::mutate(.,delay = sum(dep_delay, arr_delay, na.rm = T)) %>%
   dplyr::filter(., delay > 0) %>%
@@ -71,4 +72,94 @@ head(flight_data)
 names(which(colSums(is.na(flight_data))>1))
 flight_data <- na.omit(flight_data)
 names(which(colSums(is.na(flight_data))>1))
+```
+
+4. Next split the data into training, validation and test.
+```{r echo=TRUE, eval=TRUE}
+training_index <- caret::createDataPartition(flight_data$delay, p=0.95, list = F)
+data_test <- flight_data[-training_index,]
+validation_index <- createDataPartition(flight_data$delay[training_index], 
+                                        p=0.16, list = F)
+data_validation <- flight_data[validation_index,]
+data_train <- flight_data[-validation_index,]
+dim(data_train)
+dim(data_validation)
+dim(data_test)
+```
+
+5. Pre-process the data: scale and center the values for better precision
+```{r echo=TRUE, eval=TRUE}
+preProcValues <- preProcess(flight_data[,c(
+  'dep_time',
+  'arr_time',
+  'air_time',
+  'distance',
+  'delay',
+  'temp',
+  'humid',
+  'wind_dir',
+  'wind_speed',
+  'precip',
+  'visib'
+  )], method = c("center", "scale"))
+data_train <- predict(preProcValues, data_train)
+data_validation <- predict(preProcValues, data_validation)
+data_test <- predict(preProcValues, data_test)
+```
+
+6. Train the model with different lambda values. For each lambda value, evaluate the model
+against the validation data set. We consider the lamda values from 1 to 50.
+```{r echo=TRUE, eval=TRUE}
+final_df <- data.frame(matrix(nrow=0,ncol=4))
+colnames(final_df) <- c('lambda',
+                        'RMSE',
+                        'RSQ',
+                        'MAE')
+coef_df <- NULL
+for (i in 1:50) {
+  robj <- ridgereg$new(formula = delay~., 
+                           data = data_train, 
+                           lambda = i)  
+  x_pred <- robj$predict(data_validation)
+  perf_ridge <- postResample(pred = x_pred, obs = data_validation$delay)
+  final_df <- rbind(final_df, data.frame(lambda=i,
+                               RMSE=perf_ridge[1],
+                               RSQ=perf_ridge[2],
+                               MAE=perf_ridge[3]))
+  coef <- c(lambda = i,robj$beta_ridge)
+  coef_df <- rbind(coef_df, t(as.data.frame(coef)))
+}
+rownames(final_df) <- NULL
+```
+
+7. Plotting the RMSE, RSQ & MAE graphs
+a. RMSE
+```{r echo=TRUE, eval=TRUE}
+ggplot(final_df) + geom_line(aes(x=lambda, y= RMSE))
+```
+
+b. MAE
+```{r echo=TRUE, eval=TRUE}
+ggplot(final_df) + geom_line(aes(x=lambda, y= MAE))
+```
+
+c. RSQ
+```{r echo=TRUE, eval=TRUE}
+ggplot(final_df) + geom_line(aes(x=lambda, y= RSQ))
+```
+
+8. The optimal lambda value here is:
+```{r echo=TRUE, eval=TRUE}
+final_df[final_df$RMSE == min(final_df$RMSE),]
+opt_lambda <- final_df[final_df$RMSE == min(final_df$RMSE),]$lambda
+```
+
+9. Using the optimal lambda value, predict the test data
+```{r echo=TRUE, eval=TRUE}
+robj <- ridgereg$new(formula = delay~., 
+                           data = data_test, 
+                           lambda = opt_lambda)  
+x_pred <- robj$predict(data_test)
+perf_ridge <- postResample(pred = x_pred, obs = data_test$delay)
+perf_ridge
 ```
