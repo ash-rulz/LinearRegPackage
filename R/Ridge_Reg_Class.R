@@ -16,8 +16,6 @@
 #' @importFrom  MASS lm.ridge
 #' @export ridgereg
 #' @exportClass ridgereg
-#'
-#' @examples
 ridgereg <- setRefClass('ridgereg',
                         fields = list(
                           formula = 'formula',

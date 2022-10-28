@@ -61,17 +61,18 @@ visualize_airport_delays <- function(){
   #plotting longitude vs latitude for mean delay each airport
   #Note: Hover over each point in the plot to find Airport faa code and mean delay
   plot_delay <- ggplot2::ggplot(data = flights_ori_dest)+
-    geom_point_interactive(aes(x = flights_ori_dest$lon, 
+    ggiraph::geom_point_interactive(
+      ggplot2::aes(x = flights_ori_dest$lon, 
                                y = flights_ori_dest$lat, 
                                colour = flights_ori_dest$faa,
                                tooltip =tooltip_df$tooltip ,
                                data_id = tooltip_df$tooltip))+
-    theme(legend.position = 'None',
-          plot.title = element_text(hjust = 0.5, face = 'bold'),
-          plot.subtitle = element_text(hjust = 0.5, face = 'bold'))+
-    xlab('Longitude')+
-    ylab('Latitude')+
-    ggtitle('Longitude vs. Latitude', subtitle = 'Visualizing Mean Delay of Airports')
+    ggplot2::theme(legend.position = 'None',
+          plot.title = ggplot2::element_text(hjust = 0.5, face = 'bold'),
+          plot.subtitle = ggplot2::element_text(hjust = 0.5, face = 'bold'))+
+    ggplot2::xlab('Longitude')+
+    ggplot2::ylab('Latitude')+
+    ggplot2::ggtitle('Longitude vs. Latitude', subtitle = 'Visualizing Mean Delay of Airports')
 
   ggiraph::girafe(ggobj = plot_delay)
 
