@@ -41,7 +41,7 @@ data_test <- BostonHousing[-training_index,]
 #### Step 2.1: Simple Linear Regression:
 We fit a simple linear regression method 'lm' to predict values for the test data set.
 ```{r}
-lmFit <- train(medv ~ .,
+lmFit <- caret::train(medv ~ .,
                data = data_train,
                method = 'lm',
                preProcess = c("scale", "center"))
@@ -53,7 +53,7 @@ bh_pred <- predict(lmFit, data_test)
 We are predicting the Median Value of houses, by fitting the trained lmFit model on test data set and we use postResample to obtain RMSE, R-Squared and MAE values.
 ```{r, echo=TRUE,eval=TRUE}
 
-untuned_perf <- postResample(pred = bh_pred, obs = data_test$medv)
+untuned_perf <- caret::postResample(pred = bh_pred, obs = data_test$medv)
 untuned_perf
 ```
 
@@ -61,7 +61,7 @@ untuned_perf
 We fit a linear regression with forward selection of covariates by method 'leapForward'
 ```{r}
 
-lmFit_forward <- train(medv ~ .,
+lmFit_forward <- caret::train(medv ~ .,
                data = data_train,
                method = 'leapForward',
                preProcess = c("scale", "center"),
@@ -69,3 +69,11 @@ lmFit_forward <- train(medv ~ .,
                )
 bh_pred_forward <- predict(lmFit_forward, data_test)
 ```
+
+As it is visible, the RMSE value is now slightly lower as compared to Simple Linear Regression method.
+```{r, echo=TRUE,eval=TRUE}
+
+tuned_perf <- caret::postResample(pred = bh_pred_forward, obs = data_test$medv)
+tuned_perf
+```
+
