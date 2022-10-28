@@ -5,9 +5,9 @@
 #'     seen.
 #' @return A girafe object of an interactive plot showing mean delay of each airport
 #' @export
-#' @importFrom dplyr %>%
-#' @importFrom nycflights13 flights, airports
-#' @importFrom ggiraph girafe
+#' @import dplyr
+#' @import nycflights13
+#' @import ggiraph
 #'
 
 visualize_airport_delays <- function(){
@@ -18,16 +18,16 @@ visualize_airport_delays <- function(){
   flights <- flights[!is.na(flights$arr_delay), ]
 
   #Calculating mean delay of destination airports
-  flights_destination <-  flights %>%
+  flights_destination <-  flights %>% 
     dplyr::group_by(flights$dest) %>%
-    summarise(mean_delay = mean(arr_delay+dep_delay))
+    dplyr::summarise(mean_delay = mean(flights$arr_delay+flights$dep_delay))
 
   # View(flights_destination)
 
   #Calculating mean delay of origin airports
   flights_origin <-  flights %>%
     dplyr::group_by(flights$origin) %>%
-    summarise(mean_delay = mean(dep_delay))
+    dplyr::summarise(mean_delay = mean(flights$dep_delay))
   # View(flights_origin)
 
   #Changing names of coulmns of respective data frame
@@ -61,7 +61,9 @@ visualize_airport_delays <- function(){
   #plotting longitude vs latitude for mean delay each airport
   #Note: Hover over each point in the plot to find Airport faa code and mean delay
   plot_delay <- ggplot2::ggplot(data = flights_ori_dest)+
-    geom_point_interactive(aes(x = lon, y = lat, colour = faa,
+    geom_point_interactive(aes(x = flights_ori_dest$lon, 
+                               y = flights_ori_dest$lat, 
+                               colour = flights_ori_dest$faa,
                                tooltip =tooltip_df$tooltip ,
                                data_id = tooltip_df$tooltip))+
     theme(legend.position = 'None',
@@ -74,6 +76,4 @@ visualize_airport_delays <- function(){
   ggiraph::girafe(ggobj = plot_delay)
 
 }
-visualize_airport_delays()
-gg
-
+# visualize_airport_delays()

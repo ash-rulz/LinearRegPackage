@@ -2,8 +2,12 @@
 
 export(linreg)
 export(ridgereg)
+export(visualize_airport_delays)
 exportClasses(linreg)
 exportClasses(ridgereg)
+import(dplyr)
+import(ggiraph)
 import(ggplot2)
-import(gridExtra)
 import(methods)
+import(nycflights13)
+importFrom(MASS,lm.ridge)

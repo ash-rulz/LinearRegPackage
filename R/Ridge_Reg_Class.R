@@ -13,7 +13,7 @@
 #' @field y_pred Matrix containg the predicted values.
 #' @field data_set character.
 #'
-#'
+#' @importFrom  MASS lm.ridge
 #' @export ridgereg
 #' @exportClass ridgereg
 #'
@@ -48,6 +48,8 @@ ridgereg <- setRefClass('ridgereg',
 
                             beta_ridge_f <- as.vector(beta_ridge_f)
                             names(beta_ridge_f) <- colnames(X)
+                            # lm_test <- MASS::lm.ridge(formula = Petal.Length~Species, 
+                            #                           data = iris, lambda = 4)
 
 
                             .self[['beta_ridge']] <<- beta_ridge_f
