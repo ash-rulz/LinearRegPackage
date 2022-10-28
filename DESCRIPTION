@@ -19,5 +19,5 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 LazyData: true
-Imports: ggplot2, methods, dplyr, ggiraph, nycflights13, MASS
+Imports: ggplot2, methods, dplyr, ggiraph, nycflights13, MASS, caret, mlbench
 VignetteBuilder: knitr
