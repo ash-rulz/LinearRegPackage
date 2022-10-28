@@ -49,7 +49,6 @@ lmFit <- caret::train(medv ~ .,
                preProcess = c("scale", "center"))
 
 bh_pred <- predict(lmFit, data_test)
-
 ```
 
 We are predicting the Median Value of houses, by fitting the trained lmFit model on test data set and we use postResample to obtain RMSE, R-Squared and MAE values.
@@ -98,9 +97,11 @@ for(i in lambda){
   c_rsq <- c(c_rsq, tuned_perf_ridge[2])
   c_mae <- c(c_mae, tuned_perf_ridge[3])
 }
-plot(lambda, y_rmse)
-plot(lambda, c_mae)
-plot(lambda, c_rsq)
+tuned_ridge <- data.frame(lambda = lambda,
+                          RMSE = y_rmse,
+                          RSQ = c_rsq,
+                          MAE = c_mae)
+tuned_perf_ridge
 ```
 
 ### Step 4: Finding best hyperparameter value for $\lambda$ by 10-fold cross-validation.
@@ -124,11 +125,15 @@ We can compare the performance of various models by comparing RMSE of each model
 
 #### Performance evaluation of Linear Regression model fit for predicting test data
 
-```{r, echo=FALSE, eval=TRUE}
+```{r, echo=TRUE, eval=TRUE}
+tuned_perf <- caret::postResample(pred = bh_pred_forward, obs = data_test$medv)
 tuned_perf
 ```
 
-#### performance evaluation of Ridge Regression model fit for predicting test data
+#### Performance evaluation of Ridge Regression model fit for predicting test data
+```{r, echo=TRUE, eval=TRUE}
+head(tuned_ridge[order(tuned_ridge$RMSE),],5)
+```
 
 #### Performance evaluation of Ridge Regression by 10-fold-cross validation
 
@@ -137,3 +142,5 @@ ridge_pred <- predict(ridgefit, data_test)
 ridge_perf_rmse <- postResample(pred = ridge_pred, obs = data_test$medv)
 ridge_perf_rmse
 ```
+
+As seen above, the model fitted with linear regression with forward selection of covariates is giving the least RMSE. This is followed by the 10-fold cross-validation and the ridgereg function developed by us.
