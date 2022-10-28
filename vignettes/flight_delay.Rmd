@@ -1,0 +1,74 @@
+---
+title: "flight_delay"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{flight_delay}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(LinearRegPackage)
+library(nycflights13)
+library(caret)
+library(dplyr)
+```
+
+# Predictive modeling of flight delays using ridgereg()
+
+1. In the first step, we create a new field - delay which is the sum of dep_delay
+and arr_delay in the nycflights13::flights data. Consider only those entries
+where delay is more than 0. Then join the flight data with the weather data to 
+get the final set of dependent and independent variables.
+```{r echo=TRUE, eval=TRUE}
+flight_data <- dplyr::rowwise(nycflights13::flights) %>%
+  dplyr::mutate(.,delay = sum(dep_delay, arr_delay, na.rm = T)) %>%
+  dplyr::filter(., delay > 0) %>%
+  dplyr::inner_join(., nycflights13::weather, 
+                     by = c("origin", "year", "month", "day", "hour")) %>%
+  dplyr::select(.,
+                carrier,
+                tailnum,
+                origin,
+                dest,
+                month,
+                day,
+                flight,
+                dep_time,
+                arr_time,
+                air_time,
+                distance,
+                delay,
+                temp,
+                humid,
+                wind_dir,
+                wind_speed,
+                precip,
+                visib)
+head(flight_data)
+```
+
+2. In the next step, we convert the categorical data to integers for better precision
+```{r echo=TRUE, eval=TRUE}
+flight_data$carrier <- as.factor(flight_data$carrier)
+flight_data$origin <- as.factor(flight_data$origin)
+flight_data$dest <- as.factor(flight_data$dest)
+flight_data$tailnum <- as.factor(flight_data$tailnum)
+flight_data[,c('carrier', 'origin', 'dest', 'tailnum')] <- 
+  sapply(flight_data[,c('carrier', 'origin', 'dest' , 'tailnum')], unclass)
+head(flight_data)
+```
+
+3. Remove the entries with NA values
+```{r echo=TRUE, eval=TRUE}
+names(which(colSums(is.na(flight_data))>1))
+flight_data <- na.omit(flight_data)
+names(which(colSums(is.na(flight_data))>1))
+```
