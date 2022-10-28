@@ -1,5 +1,5 @@
 ---
-title: "flight_delay"
+title: "Predictive modelling for flight delays"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{flight_delay}
