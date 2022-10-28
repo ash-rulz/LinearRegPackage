@@ -1,5 +1,3 @@
-library(ggplot2)
-library(gridExtra)
 #' @title Computes Multiple Linear Regression For Given Formula And Data
 #'
 #' @description Linreg class calculates the computations required for multiple regression model
@@ -19,7 +17,6 @@ library(gridExtra)
 #' @exportClass linreg
 #' @export linreg
 #' @import ggplot2
-#' @import gridExtra
 #' @import methods
 #'
 linreg <- setRefClass('linreg',
@@ -111,7 +108,7 @@ linreg <- setRefClass('linreg',
                                  ggtitle('Scale Location') +
                                  theme(plot.title = element_text(hjust = 0.5), panel.background = element_rect(fill = 'white', color = 'black'))+
                                  stat_summary(fun=mean, colour="red", geom="line", aes(group = 1))
-                               grid.arrange(plot_1, plot_2, nrow = 1)
+                               # grid.arrange(plot_1, plot_2, nrow = 1)
                              },
                              resid = function(){
                                return(c(resid_e))

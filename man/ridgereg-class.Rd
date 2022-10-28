@@ -4,24 +4,29 @@
 \name{ridgereg-class}
 \alias{ridgereg-class}
 \alias{ridgereg}
-\title{Ridge Regression}
+\title{Computes Ridge Regression For Given Formula And Data}
 \description{
+ridgereg class calculates the computations required for multiple 
+    regression model for ridge regression. It also provides methods like predict, 
+    plot, coef and show.
+}
+\details{
 Ridge Regression
 }
 \section{Fields}{
 
 \describe{
-\item{\code{formula}}{formula.}
+\item{\code{formula}}{Formula for the ridge regression.}
 
-\item{\code{data}}{data.frame.}
+\item{\code{data}}{Data frame containing the dependent and independent variables.}
 
-\item{\code{lambda}}{numeric.}
+\item{\code{lambda}}{Number for the lambda value.}
 
-\item{\code{beta_ridge}}{vector.}
+\item{\code{beta_ridge}}{The vector for the coefficients.}
 
-\item{\code{X}}{matrix.}
+\item{\code{X}}{The model matrix.}
 
-\item{\code{y_pred}}{matrix.}
+\item{\code{y_pred}}{Matrix containg the predicted values.}
 
 \item{\code{data_set}}{character.}
 }}
