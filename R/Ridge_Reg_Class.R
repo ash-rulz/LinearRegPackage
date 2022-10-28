@@ -1,11 +1,16 @@
 #' Ridge Regression
+#' @title Computes Ridge Regression For Given Formula And Data
 #'
-#' @field formula formula.
-#' @field data data.frame.
-#' @field lambda numeric.
-#' @field beta_ridge vector.
-#' @field X matrix.
-#' @field y_pred matrix.
+#' @description ridgereg class calculates the computations required for multiple 
+#'     regression model for ridge regression. It also provides methods like predict, 
+#'     plot, coef and show.
+#'
+#' @field formula Formula for the ridge regression.
+#' @field data Data frame containing the dependent and independent variables.
+#' @field lambda Number for the lambda value.
+#' @field beta_ridge The vector for the coefficients.
+#' @field X The model matrix.
+#' @field y_pred Matrix containg the predicted values.
 #' @field data_set character.
 #'
 #'
@@ -21,8 +26,7 @@ ridgereg <- setRefClass('ridgereg',
                           beta_ridge = 'vector',
                           X = 'matrix',
                           y_pred = 'matrix',
-                          data_set = 'character',
-                          terms = 'function'
+                          data_set = 'character'
                         ),
                         methods = list(
                           initialize = function(formula = formula(),
@@ -51,13 +55,8 @@ ridgereg <- setRefClass('ridgereg',
 
                           },
                           predict = function(test_data){
-                            # t_obj <- terms(object)
-                            # y_m <- as.matrix(newdata[,all.vars(formula)[1]])
-                            # t_terms <- delete.response(t_obj)
-                            # m <- model.frame(t_terms, newdata)
                             X_m <- model.matrix(formula, test_data)
                             X_m[,-1] <- scale(X_m[,-1])
-                            # beta_ridge_f_m <- solve((t(X_m)%*%X_m)+(diag(ncol(X_m)))*lambda)%*%(t(X_m) %*% y_m)
                             y_pred_f_m <- X_m %*% beta_ridge
 
                             return(y_pred_f_m)
@@ -71,21 +70,4 @@ ridgereg <- setRefClass('ridgereg',
                             cat("Coefficients:\n")
                             print(beta_ridge)
                           }
-
-
                         ))
-ridgeobj <- ridgereg$new(formula = medv~., data = train_data, lambda = 4)
-ridgeobj$formula
-ridgeobj$data
-ridgeobj$lambda
-ridgeobj$X
-ridgeobj$beta_ridge
-ridgeobj$predict(test_data)
-print(ridgeobj)
-
-
-# library(MASS)
-# lm_test <- lm.ridge(formula = Petal.Length~Species, data = iris, lambda = 4)
-# lm_test$plot(formula = Petal.Length~Species, data = iris, lambda = 4)
-
-
