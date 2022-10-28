@@ -1,10 +1,19 @@
-library(nycflights13)
-library(dplyr)
-library(ggiraph)
-View(flights)
-View(airports)
+#' Visualizing Mean Delay Of Flights For Different Airports In USA
+#' @description We visualize the mean delay of flights for different airports
+#'     by plotting the Longitude vs Latitude respectively. Upon hovering over
+#'     the points in the plot, each airport's mean delay with faa code can be
+#'     seen.
+#' @return A girafe object of an interactive plot showing mean delay of each airport
+#' @export
+#' @importFrom dplyr %>%
+#' @importFrom nycflights13 flights, airports
+#' @importFrom ggiraph girafe
+#'
+
 visualize_airport_delays <- function(){
   #Removes rows with NA values based on column names
+  flights <- nycflights13::flights
+  airports <- nycflights13::airports
   flights <- flights[!is.na(flights$dep_delay), ]
   flights <- flights[!is.na(flights$arr_delay), ]
 
@@ -51,7 +60,7 @@ visualize_airport_delays <- function(){
 
   #plotting longitude vs latitude for mean delay each airport
   #Note: Hover over each point in the plot to find Airport faa code and mean delay
-  plot_delay <- ggplot(data = flights_ori_dest)+
+  plot_delay <- ggplot2::ggplot(data = flights_ori_dest)+
     geom_point_interactive(aes(x = lon, y = lat, colour = faa,
                                tooltip =tooltip_df$tooltip ,
                                data_id = tooltip_df$tooltip))+
@@ -62,9 +71,9 @@ visualize_airport_delays <- function(){
     ylab('Latitude')+
     ggtitle('Longitude vs. Latitude', subtitle = 'Visualizing Mean Delay of Airports')
 
-  girafe(ggobj = plot_delay)
+  ggiraph::girafe(ggobj = plot_delay)
 
 }
 visualize_airport_delays()
-
+gg
 
